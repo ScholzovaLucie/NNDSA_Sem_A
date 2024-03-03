@@ -23,5 +23,10 @@ namespace scholzova_sem_01.Lists
         {
             return Name + ": " + StartVertex + ", " + EndVertex;
         }
+
+        public bool sameEdge(Edge other)
+        {
+            return this.StartVertex.Name.Equals(other.StartVertex.Name) && this.EndVertex.Name.Equals(other.EndVertex.Name);
+        }
     }
 }

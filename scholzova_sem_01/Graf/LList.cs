@@ -27,7 +27,8 @@ namespace scholzova_sem_01.Graf
             {
                 LinkedList<Vertex> list = new LinkedList<Vertex>();
                 list.AddFirst(startVertex);
-                DFS(graphData, startVertex, new Path(list));
+                List<Vertex> visitedVertices = new List<Vertex>();
+                DFS(graphData, startVertex, new Path(list), visitedVertices);
             }
         }
 
@@ -41,30 +42,43 @@ namespace scholzova_sem_01.Graf
             }
         }
 
-        private void DFS(GraphData graphData, Vertex currentVertex, Path currentPath, Vertex beforeVertex = null)
+        private void DFS(GraphData graphData, Vertex currentVertex, Path currentPath, List<Vertex> visitedVertices)
         {
-            foreach (var edge in graphData.Edges.Where(e => e.StartVertex.Name.Equals(currentVertex.Name)))
+            IEnumerable<Edge> edges = graphData.Edges.Where(e => e.StartVertex.Name.Equals(currentVertex.Name));
+            Console.WriteLine("nalezene hrany: " + edges.Count());
+            foreach (var edge in edges)
             {
                 Vertex nextVertex = edge.EndVertex;
-                Edge exist = existNextPath(nextVertex.Name, graphData);
-                bool cross = isCross(nextVertex, graphData, beforeVertex, currentPath, currentVertex);
+                
+                if (!visitedVertices.Contains(nextVertex))
+                {
+                    bool crossed = false;
+                    if (containsByName(nextVertex.Name, graphData.Cross))
+                    {
+                        (currentVertex, currentPath, visitedVertices) = isCross(nextVertex, graphData, currentPath, currentVertex, visitedVertices);
+                        DFS(graphData, currentVertex, currentPath, visitedVertices);
+                        crossed = true;
+                    }
+                        
 
-                if (!containsByName(nextVertex.Name, graphData.OutputVertices) && exist != null && !cross)
+                    if (!containsByName(nextVertex.Name, graphData.OutputVertices) && crossed == false)
                     {
                         Path actualPath = currentPath.Copy();
                         actualPath.Vertices.AddLast(nextVertex);
-                        DFS(graphData, nextVertex, actualPath);
+                        visitedVertices.Add(currentVertex);
+                        DFS(graphData, nextVertex, actualPath, visitedVertices);
                     }
 
-                if (!cross) lastVertex(nextVertex, graphData, beforeVertex, currentPath, currentVertex, exist);
+                    lastVertex(nextVertex, graphData, currentPath, visitedVertices);
 
-
+                }
             }
 
         }
 
-        private void lastVertex(Vertex nextVertex, GraphData graphData, Vertex beforeVertex, Path currentPath, Vertex currentVertex, Edge exist)
+        private void lastVertex(Vertex nextVertex, GraphData graphData, Path currentPath, List<Vertex> visitedVertices)
         {
+            Edge exist = existNextPath(nextVertex.Name, graphData);
             if (containsByName(nextVertex.Name, graphData.OutputVertices) && exist != null)
             {
                 currentPath.Vertices.AddLast(nextVertex);
@@ -76,7 +90,7 @@ namespace scholzova_sem_01.Graf
                 }
 
                 Path newPath = currentPath.Copy();
-                DFS(graphData, nextVertex, newPath);
+                DFS(graphData, nextVertex, newPath, visitedVertices);
             }
             else if (containsByName(nextVertex.Name, graphData.OutputVertices))
             {
@@ -88,65 +102,59 @@ namespace scholzova_sem_01.Graf
                     List.Add(currentPath);
                 }
 
-                LinkedList<Vertex> list = new LinkedList<Vertex>();
-                list.AddFirst(currentVertex);
-                Path newPath = new Path(list);
-                newPath.Vertices.AddLast(nextVertex);
             }
         }
 
-        private bool isCross(Vertex nextVertex, GraphData graphData, Vertex beforeVertex, Path currentPath, Vertex currentVertex)
+        private (Vertex, Path, List<Vertex>) isCross(Vertex nextVertex, GraphData graphData, Path currentPath, Vertex currentVertex, List<Vertex> visitedVertices)
         {
-            if (containsByName(nextVertex.Name, graphData.Cross))
-            {
-                beforeVertex = currentVertex;
-                currentPath.Vertices.AddLast(nextVertex);
-                DFS(graphData, nextVertex, currentPath, beforeVertex);
-                return true;
-            }
+     
+            currentPath.Vertices.AddLast(nextVertex);
+            visitedVertices.Add(nextVertex);
+            List<Edge> anotherNextVertex = getAnotherNextVertex(currentVertex, graphData);
 
-            if (containsByName(currentVertex.Name, graphData.Cross) && beforeVertex != null)
+            List<Edge> crossAnotherNextVertex = getAnotherNextVertex(nextVertex, graphData);
+            Edge forbidenEdge = null;
+            Edge edge = null;
+
+            foreach (var another in anotherNextVertex)
             {
-                List<Edge> anotherNextVertex = getAnotherNextVertex(beforeVertex, graphData);
-                if (anotherNextVertex.Count > 1)
+                foreach (var crossAnother in crossAnotherNextVertex)
                 {
-                    for (int i = 0; i < anotherNextVertex.Count; i++)
+                    if (crossAnother.EndVertex.Name.Equals(another.EndVertex.Name))
                     {
-                        for (int j = 0; j < graphData.Edges.Count; j++)
-                        {
-                            Edge edge = findEdge(graphData.Edges[j].StartVertex, graphData.Edges[j].EndVertex, graphData);
-
-                            if (edge.StartVertex.Name.Equals(currentVertex.Name) && edge.EndVertex.Name.Equals(nextVertex.Name))
-                            {
-                                currentPath.Vertices.AddLast(edge.EndVertex);
-                                DFS(graphData, edge.EndVertex, currentPath);
-                                return true;
-                            }
-                        }
+                        forbidenEdge = crossAnother;
+                        break;
                     }
-                   
                 }
-
-                else if (!nextVertex.Name.Equals(anotherNextVertex[0].EndVertex.Name))
-                {
-                    currentPath.Vertices.AddLast(nextVertex);
-                    DFS(graphData, nextVertex, currentPath);
-                    return true;
-                }
-
+            if (forbidenEdge != null) break;
             }
-            
-            return false;
+
+            foreach (var crossAnother in crossAnotherNextVertex)
+            {
+                if(!crossAnother.sameEdge(forbidenEdge)) edge = crossAnother;
+            }
+
+            currentPath.Vertices.AddLast(edge.EndVertex);
+            visitedVertices.Add(edge.EndVertex);
+            return (edge.EndVertex, currentPath, visitedVertices);
+              
         }
 
         private Edge findEdge(Vertex start, Vertex end, GraphData data)
         {
+            if(start != null && end != null)
+            {
             for (int i = 0; i < data.Edges.Count; i++)
             {
-                if (data.Edges[i].StartVertex.Name.Equals(start.Name) && data.Edges[i].EndVertex.Name.Equals(end.Name)) return data.Edges[i]; 
+                if (data.Edges[i].StartVertex.sameVertex(start) && data.Edges[i].EndVertex.sameVertex(end)) return data.Edges[i]; 
             }
+            }
+            
             return null;
         }
+
+      
+        
 
         private List<Edge> getAnotherNextVertex(Vertex actual, GraphData data)
         {

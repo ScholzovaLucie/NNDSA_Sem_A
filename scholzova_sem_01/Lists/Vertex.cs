@@ -19,5 +19,10 @@ namespace scholzova_sem_01.Lists
         {
             return Name;
         }
+
+        public bool sameVertex(Vertex other)
+        {
+            return this.Name.Equals(other.Name);
+        }
     }
 }

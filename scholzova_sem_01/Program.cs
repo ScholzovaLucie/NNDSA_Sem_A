@@ -5,6 +5,6 @@ class Program
     static void Main(string[] args)
     {
         GraphProcessor graphProcessor = new GraphProcessor();
-        graphProcessor.ProcessGraph("sem_01_uvodni.json");
+        graphProcessor.ProcessGraph("../../../files/sem_01_uvodni.json");
     }
 }
