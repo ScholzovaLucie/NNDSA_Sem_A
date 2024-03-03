@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Lists
 {
-    internal class Path
+    public class Path
     {
         public string Name { get; set; }
         public LinkedList<Vertex> Vertices { get; set; }

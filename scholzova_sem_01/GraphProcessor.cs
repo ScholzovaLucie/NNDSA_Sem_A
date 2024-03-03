@@ -1,16 +1,10 @@
-﻿using Microsoft.VisualBasic;
-using scholzova_sem_01.Graf;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using scholzova_sem_01.Graf;
+using scholzova_sem_01.Parser;
+
 
 namespace scholzova_sem_01
 {
-    internal class GraphProcessor
+    public class GraphProcessor
     {
         public LList LList { get; set; }
         public RList RList { get; set; }
@@ -18,7 +12,7 @@ namespace scholzova_sem_01
 
         public void ProcessGraph(string filePath)
         {
-            Parser parser = new Parser();
+            Parser.Parser parser = new Parser.Parser();
             Data data = parser.loadData(filePath);
             GraphData graphData = new GraphData(data);
 
@@ -28,7 +22,7 @@ namespace scholzova_sem_01
             LList.printList();
             RList.printList();
 
-
+            parser.saveData(RList, LList);
         }
 
 

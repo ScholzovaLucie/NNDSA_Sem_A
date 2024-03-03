@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Lists
 {
-    internal class Vertex
+    public class Vertex
     {
         public string Name { get; set; }
 

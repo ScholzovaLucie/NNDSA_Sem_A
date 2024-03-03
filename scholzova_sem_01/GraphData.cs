@@ -7,13 +7,13 @@ using scholzova_sem_01.Lists;
 
 namespace scholzova_sem_01
 {
-    internal class GraphData
+    public class GraphData
     {
 
         public List<Vertex> Vertices { get; private set; }
         public List<Vertex> InputVertices { get; private set; }
         public List<Vertex> OutputVertices { get; private set; }
-        public List<Vertex> Cross {  get; private set; }
+        public List<List<Vertex>> Cross {  get; private set; }
         public List<Edge> Edges { get; private set; }
 
         private Data data;
@@ -23,7 +23,7 @@ namespace scholzova_sem_01
             Vertices = new List<Vertex>();
             InputVertices = new List<Vertex>();
             OutputVertices = new List<Vertex>();
-            Cross = new List<Vertex>();
+            Cross = new List<List<Vertex>>();
             Edges = new List<Edge>();
             this.data = data;
             createGrafData();
@@ -58,7 +58,12 @@ namespace scholzova_sem_01
             {
                 for (int i = 0; i < data.Cross.Length; i++)
                 {
-                    this.Cross.Add(new Vertex(data.Cross[i]));
+                    List<Vertex> verzexes = new List<Vertex>();
+                    foreach (var item in data.Cross[i])
+                    {
+                        verzexes.Add(new Vertex(item));
+                    }
+                    this.Cross.Add(verzexes);
                 }
             }
             

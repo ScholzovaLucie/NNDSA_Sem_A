@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using scholzova_sem_01.Lists;
 using Path = scholzova_sem_01.Lists.Path;
 
 namespace scholzova_sem_01.Graf
 {
-    internal class RList
+    public class RList
     {
-        private List<List<Path>> List { get; set; }
+        [JsonProperty]
+        public List<List<Path>> List { get; set; }
         public RList(LList LList)
         {
             List = FindDisjointPaths(LList.List, new List<Path>(), new List<List<Path>>());

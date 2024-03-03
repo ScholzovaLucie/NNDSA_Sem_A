@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Lists
 {
-    internal class Edge
+    public class Edge
     {
         public string Name { get; set; }
         public Vertex StartVertex { get; set; }
