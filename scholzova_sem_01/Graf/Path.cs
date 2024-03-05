@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace scholzova_sem_01.Lists
+namespace scholzova_sem_01.Graf
 {
-    public class Path
+    public class Path<T>
     {
         public string Name { get; set; }
-        public LinkedList<Vertex> Vertices { get; set; }
+        public LinkedList<Vertex<T>> Vertices { get; set; }
 
-        public Path(LinkedList<Vertex> vertices)
+        public Path(LinkedList<Vertex<T>> vertices)
         {
             Vertices = vertices;
         }
 
-        public Path(int index, LinkedList<Vertex> vertices)
+        public Path(int index, LinkedList<Vertex<T>> vertices)
         {
             Name = "A" + index;
             Vertices = vertices;
@@ -28,26 +28,28 @@ namespace scholzova_sem_01.Lists
             Name = "A" + index;
         }
 
-        public Path Copy()
+        public Path<T> Copy()
         {
-            return new Path(new LinkedList<Vertex>(Vertices));
+            LinkedList<Vertex<T>> copiedVertices = new LinkedList<Vertex<T>>(Vertices);
+            return new Path<T>(copiedVertices);
         }
 
-        public bool Equals(Path other)
+
+        public bool Equals(Path<T> other)
         {
             if (Vertices.Count != other.Vertices.Count) return false;
 
             bool same = true;
 
-            Vertex aktual_this = Vertices.First();
-            Vertex aktual_other = other.Vertices.First();
+            Vertex<T> aktual_this = Vertices.First();
+            Vertex<T> aktual_other = other.Vertices.First();
 
             if (!aktual_this.Name.Equals(aktual_other.Name))
             {
                 return false;
             }
 
-            foreach (Vertex s in Vertices)
+            foreach (Vertex<T> s in Vertices)
             {
                 if (Vertices.Find(aktual_this).Next == null)
                 {
@@ -70,7 +72,7 @@ namespace scholzova_sem_01.Lists
             return same;
         }
 
-        public bool IsDisjoint(Path other)
+        public bool IsDisjoint(Path<T> other)
         {
             foreach (var vertex in Vertices)
             {

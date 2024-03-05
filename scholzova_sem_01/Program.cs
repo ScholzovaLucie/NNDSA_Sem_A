@@ -4,7 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        GraphProcessor graphProcessor = new GraphProcessor();
+        GraphProcessor<string> graphProcessor = new GraphProcessor<string>();
         graphProcessor.ProcessGraph("../../../files/sem_01_uvodni.json");
     }
 }

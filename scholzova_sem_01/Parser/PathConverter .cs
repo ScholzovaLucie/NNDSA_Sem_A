@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Path = scholzova_sem_01.Lists.Path;
-using RList = scholzova_sem_01.Graf.RList;
+using scholzova_sem_01.Graf;
 
 
 namespace scholzova_sem_01
@@ -23,25 +22,30 @@ namespace scholzova_sem_01
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            if (value is Path path)
-            {
-                JObject obj = new JObject();
-                obj.Add("Name", path.Name);
-                obj.WriteTo(writer);
-            }
-            else if (value is RList rList)
-            {
-                JArray array = new JArray();
-                foreach (var paths in rList.List)
-                {
-                    JObject obj = new JObject();
-                    obj.Add("Name", paths.First().Name);
-                    array.Add(obj);
-                }
-                array.WriteTo(writer);
-            }
+            throw new NotImplementedException();
         }
+
+        //public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        //{
+        //    if (value is Path<T> path)
+        //    {
+        //        JObject obj = new JObject();
+        //        obj.Add("Name", path.Name);
+        //        obj.WriteTo(writer);
+        //    }
+        //    else if (value is RList rList)
+        //    {
+        //        JArray array = new JArray();
+        //        foreach (var paths in rList.List)
+        //        {
+        //            JObject obj = new JObject();
+        //            obj.Add("Name", paths.First().Name);
+        //            array.Add(obj);
+        //        }
+        //        array.WriteTo(writer);
+        //    }
+        //}
     }
 }

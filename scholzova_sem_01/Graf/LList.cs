@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using scholzova_sem_01.Lists;
-using Path = scholzova_sem_01.Lists.Path;
+﻿using Newtonsoft.Json;
 
 namespace scholzova_sem_01.Graf
 {
-    public class LList
+    public class LList<T>
     {
         [JsonProperty]
-        public List<Path> List { get; set; }
+        public List<Path<T>> List { get; set; }
         private int index = 1;
-        private GraphData graphData;
+        private Graf<T> graphData;
+        public List<Vertex<T>> InputVertices { get; private set; }
+        public List<Vertex<T>> OutputVertices { get; private set; }
 
-        public LList(GraphData graphData)
+        public LList(Graf<T> graphData, List<Vertex<T>> InputVertices, List<Vertex<T>> OutputVertices)
         {
-            List = new List<Path>();
             this.graphData = graphData;
-            createLList();
+            this.InputVertices = InputVertices;
+            this.OutputVertices = OutputVertices;
+            List = new List<Path<T>>();
+            FindPaths();
+            printList();
         }
-
-
-        private void createLList()
-        {
-            foreach (var startVertex in this.graphData.InputVertices)
-            {
-                LinkedList<Vertex> list = new LinkedList<Vertex>();
-                list.AddFirst(startVertex);
-                List<Vertex> visitedVertices = new List<Vertex>();
-                DFS(startVertex, new Path(list), visitedVertices);
-            }
-        }
-
 
         public void printList()
         {
@@ -46,39 +30,51 @@ namespace scholzova_sem_01.Graf
             }
         }
 
-        private void DFS(Vertex currentVertex, Path currentPath, List<Vertex> visitedVertices)
+        public void FindPaths()
         {
-            IEnumerable<Edge> edges = this.graphData.Edges.Where(e => e.StartVertex.Name.Equals(currentVertex.Name));
-            foreach (var edge in edges)
+            foreach (var inputVertex in InputVertices)
             {
-                Vertex nextVertex = edge.EndVertex;
-                
-                if (!visitedVertices.Contains(nextVertex))
+                List<Vertex<T>> visited = new List<Vertex<T>>();
+                DFS(inputVertex, visited);
+            }
+            Console.WriteLine("konex");
+        }
+
+        private void DFS(Vertex<T> currentVertex, List<Vertex<T>> visited)
+        {
+            visited.Add(currentVertex);
+
+          
+            if (containsByName(currentVertex.Name, OutputVertices) && !PathAlreadyExists(visited))
+            {
+                List.Add(new Path<T>(index++, new LinkedList<Vertex<T>>(visited)));
+            }
+
+            foreach (var edge in currentVertex.Edges)
+            {
+                if (!visited.Contains(edge.EndVertex))
                 {
-                    var cross = isCross(currentVertex, nextVertex);
-                    if (cross != null)
-                    {
-                        currentPath.Vertices.AddLast(nextVertex);
-                        visitedVertices.Add(currentVertex);
-                        nextVertex = cross;
-                    }
-
-                    if (!containsByName(nextVertex.Name, this.graphData.OutputVertices))
-                    {
-                        Path actualPath = currentPath.Copy();
-                        actualPath.Vertices.AddLast(nextVertex);
-                        visitedVertices.Add(currentVertex);
-                        DFS(nextVertex, actualPath, visitedVertices);
-                    }
-
-                    lastVertex(nextVertex, currentPath, visitedVertices);
-
+                    DFS(edge.EndVertex, visited);
                 }
             }
 
-        }
 
-        private Vertex isCross(Vertex current, Vertex next)
+            foreach (var crossList in graphData.Cross)
+            {
+                if (crossList[0] == currentVertex)
+                {
+                    visited.Add(crossList[1]);
+                    DFS(crossList[2], visited);
+                }
+            }
+
+            visited.Remove(currentVertex);
+        }
+    
+
+
+
+private Vertex<T> isCross(Vertex<T> current, Vertex<T> next)
         {
             foreach (var item in this.graphData.Cross)
             {
@@ -87,52 +83,7 @@ namespace scholzova_sem_01.Graf
             return null;
         }
 
-        private void lastVertex(Vertex nextVertex, Path currentPath, List<Vertex> visitedVertices)
-        {
-            Edge exist = existNextPath(nextVertex.Name);
-            if (containsByName(nextVertex.Name, this.graphData.OutputVertices) && exist != null)
-            {
-                currentPath.Vertices.AddLast(nextVertex);
-
-                if (!PathAlreadyExists(currentPath))
-                {
-                    currentPath.setName(index++);
-                    List.Add(currentPath);
-                }
-
-                Path newPath = currentPath.Copy();
-                DFS(nextVertex, newPath, visitedVertices);
-            }
-            else if (containsByName(nextVertex.Name, this.graphData.OutputVertices))
-            {
-                currentPath.Vertices.AddLast(nextVertex);
-
-                if (!PathAlreadyExists(currentPath))
-                {
-                    currentPath.setName(index++);
-                    List.Add(currentPath);
-                }
-
-            }
-        }
-
-
-        private Edge findEdge(Vertex start, Vertex end)
-        {
-            if(start != null && end != null)
-            {
-            for (int i = 0; i < this.graphData.Edges.Count; i++)
-            {
-                if (this.graphData.Edges[i].StartVertex.sameVertex(start) && this.graphData.Edges[i].EndVertex.sameVertex(end)) return this.graphData.Edges[i]; 
-            }
-            }
-            
-            return null;
-        }
-
-     
-
-        private bool containsByName(string name, List<Vertex> list)
+        private bool containsByName(T name, List<Vertex<T>> list)
         {
             foreach (var vertex in list)
             {
@@ -145,20 +96,7 @@ namespace scholzova_sem_01.Graf
             return false;
         }
 
-        private Edge existNextPath(string name)
-        {
-            foreach (var edge in this.graphData.Edges)
-            {
-                if (edge.StartVertex.Name.Equals(name))
-                {
-                    return edge;
-                }
-
-            }
-            return null;
-        }
-
-        private bool PathAlreadyExists(Path newPath)
+        private bool PathAlreadyExists(List<Vertex<T>> newPath)
         {
             foreach (var path in List)
             {
