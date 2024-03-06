@@ -1,7 +1,7 @@
 ﻿using scholzova_sem_01.Graf;
+using scholzova_sem_01.Path;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +18,8 @@ namespace scholzova_sem_01.Graf
 
         public int size { get { return vertices.Count; } }
 
-        public Graf() 
-        { 
+        public Graf()
+        {
             this.vertices = new List<Vertex<T>>();
             this.cross = new List<List<Vertex<T>>>();
         }

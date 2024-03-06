@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
+using scholzova_sem_01.Graf;
 
-namespace scholzova_sem_01.Graf
+namespace scholzova_sem_01.Path
 {
     public class LList<T>
     {
@@ -18,7 +19,6 @@ namespace scholzova_sem_01.Graf
             this.OutputVertices = OutputVertices;
             List = new List<Path<T>>();
             FindPaths();
-            printList();
         }
 
         public void printList()
@@ -37,15 +37,18 @@ namespace scholzova_sem_01.Graf
                 List<Vertex<T>> visited = new List<Vertex<T>>();
                 DFS(inputVertex, visited);
             }
-            Console.WriteLine("konex");
         }
 
         private void DFS(Vertex<T> currentVertex, List<Vertex<T>> visited)
         {
             visited.Add(currentVertex);
 
-          
-            if (containsByName(currentVertex.Name, OutputVertices) && !PathAlreadyExists(visited))
+
+            if (
+                containsByName(currentVertex.Name, OutputVertices) &&
+                visited.Count > 1 &&
+                !PathAlreadyExists(visited)
+                )
             {
                 List.Add(new Path<T>(index++, new LinkedList<Vertex<T>>(visited)));
             }
@@ -70,18 +73,7 @@ namespace scholzova_sem_01.Graf
 
             visited.Remove(currentVertex);
         }
-    
 
-
-
-private Vertex<T> isCross(Vertex<T> current, Vertex<T> next)
-        {
-            foreach (var item in this.graphData.Cross)
-            {
-                if (item[0].sameVertex(current) && item[1].sameVertex(next)) return item[2];
-            }
-            return null;
-        }
 
         private bool containsByName(T name, List<Vertex<T>> list)
         {

@@ -1,5 +1,6 @@
 ﻿using scholzova_sem_01.Graf;
 using scholzova_sem_01.Parser;
+using scholzova_sem_01.Path;
 using System.Collections.Generic;
 
 
@@ -8,29 +9,29 @@ namespace scholzova_sem_01
     public class GraphProcessor<T>
     {
         public LList<T> LList { get; set; }
-        //public RList RList { get; set; }
+        public RList<T> DisjunktPaths { get; set; }
 
 
         public void ProcessGraph(string filePath)
         {
-            (
-                List<Vertex<T>> vertices, 
-                List<Edge<T>> edges,
-                List<Vertex<T>>  InputVertices,
-                List<Vertex<T>>  OutputVertices, 
-                List<List<Vertex<T>>> cross
-                ) = new Parser<T>().ParseDataFromFile<T>(filePath);
+            Parser<T> parser = new Parser<T>(filePath);
+            List<Vertex<T>> vertices = parser.ExtractVertices();
+            List<Edge<T>> edges = parser.ExtractEdges();
+            List<Vertex<T>> InputVertices = parser.ExtractInputVertices();
+            List<Vertex<T>> OutputVertices = parser.ExtractOutputVertices();
+            List<List<Vertex<T>>> cross = parser.ExtractCross();
 
             Graf<T> graphData = CreateGraf(vertices, edges, cross);
 
             LList = new LList<T>(graphData, InputVertices, OutputVertices);
 
-            //RList = new RList(LList);
+            DisjunktPaths = new RList<T>(LList);
 
-           // LList.printList();
-           // RList.printList();
+            LList.printList();
+            DisjunktPaths.printList();
 
-           // parser.saveData(RList, LList);
+            Console.WriteLine("LList: "+LList.List.Count);
+            Console.WriteLine("RList: " + DisjunktPaths.List.Count);
         }
 
         private Graf<T> CreateGraf(List<Vertex<T>> vertices, List<Edge<T>> edges, List<List<Vertex<T>>> cross)

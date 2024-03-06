@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using scholzova_sem_01.Graf;
 
-namespace scholzova_sem_01.Graf
+namespace scholzova_sem_01.Path
 {
     public class Path<T>
     {
