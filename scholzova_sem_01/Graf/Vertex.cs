@@ -38,6 +38,16 @@ namespace scholzova_sem_01.Graf
             return Convert.ToString(Name);
         }
 
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17; 
+                hash = hash * 23 + (Name != null ? Name.GetHashCode() : 0);
+                return hash;
+            }
+        }
+
 
     }
 }

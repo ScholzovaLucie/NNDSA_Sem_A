@@ -8,8 +8,8 @@ namespace scholzova_sem_01
 {
     public class GraphProcessor<T>
     {
-        public LList<T> LList { get; set; }
-        public RList<T> DisjunktPaths { get; set; }
+        public Paths<T> paths { get; set; }
+        public DisjunktPaths<T> DisjunktPaths { get; set; }
 
 
         public void ProcessGraph(string filePath)
@@ -23,15 +23,15 @@ namespace scholzova_sem_01
 
             Graf<T> graphData = CreateGraf(vertices, edges, cross);
 
-            LList = new LList<T>(graphData, InputVertices, OutputVertices);
+            paths = new Paths<T>(graphData, InputVertices, OutputVertices);
 
-            DisjunktPaths = new RList<T>(LList);
+            DisjunktPaths = new DisjunktPaths<T>(paths);
 
-            LList.printList();
+            paths.printList();
             DisjunktPaths.printList();
 
-            Console.WriteLine("LList: "+LList.List.Count);
-            Console.WriteLine("RList: " + DisjunktPaths.List.Count);
+            Console.WriteLine("LList: "+paths.paths.Count);
+            Console.WriteLine("RList: " + DisjunktPaths.getDisjonktPaths().Count);
         }
 
         private Graf<T> CreateGraf(List<Vertex<T>> vertices, List<Edge<T>> edges, List<List<Vertex<T>>> cross)

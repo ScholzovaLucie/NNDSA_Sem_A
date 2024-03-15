@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,16 @@ namespace scholzova_sem_01.Path
         {
             LinkedList<Vertex<T>> copiedVertices = new LinkedList<Vertex<T>>(Vertices);
             return new Path<T>(copiedVertices);
+        }
+
+        public Vertex<T> getFirst()
+        {
+            return Vertices.First();
+        }
+
+        public Vertex<T> getLast()
+        {
+            return Vertices.Last();
         }
 
 
@@ -79,11 +90,28 @@ namespace scholzova_sem_01.Path
             {
                 foreach (var vertex1 in other.Vertices)
                 {
-                    if (vertex1.Name.Equals(vertex.Name)) { return false; }
+                    if (vertex1.Name.Equals(vertex.Name)) {
+                        return false; 
+                    }
                 }
             }
 
             return true;
+        }
+    }
+
+    public class PathComparer<T> : IEqualityComparer<Path<T>>
+    {
+        public bool Equals(Path<T> x, Path<T> y)
+        {
+            // Porovnání pouze podle jména
+            return x?.Name == y?.Name;
+        }
+
+        public int GetHashCode(Path<T> obj)
+        {
+            // Vrátí hash kódu jména, aby byla zaručena unikátnost
+            return obj.Name?.GetHashCode() ?? 0;
         }
     }
 }

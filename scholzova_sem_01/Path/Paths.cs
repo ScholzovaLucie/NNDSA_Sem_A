@@ -3,28 +3,28 @@ using scholzova_sem_01.Graf;
 
 namespace scholzova_sem_01.Path
 {
-    public class LList<T>
+    public class Paths<T>
     {
         [JsonProperty]
-        public List<Path<T>> List { get; set; }
+        public List<Path<T>> paths { get; set; }
         private int index = 1;
         private Graf<T> graphData;
         public List<Vertex<T>> InputVertices { get; private set; }
         public List<Vertex<T>> OutputVertices { get; private set; }
 
-        public LList(Graf<T> graphData, List<Vertex<T>> InputVertices, List<Vertex<T>> OutputVertices)
+        public Paths(Graf<T> graphData, List<Vertex<T>> InputVertices, List<Vertex<T>> OutputVertices)
         {
             this.graphData = graphData;
             this.InputVertices = InputVertices;
             this.OutputVertices = OutputVertices;
-            List = new List<Path<T>>();
+            paths = new List<Path<T>>();
             FindPaths();
         }
 
         public void printList()
         {
             Console.WriteLine("Dostupné cesty:");
-            foreach (var path in List)
+            foreach (var path in paths)
             {
                 Console.WriteLine($"Cesta {path.Name}: {string.Join(" -> ", path.Vertices)}");
             }
@@ -50,7 +50,7 @@ namespace scholzova_sem_01.Path
                 !PathAlreadyExists(visited)
                 )
             {
-                List.Add(new Path<T>(index++, new LinkedList<Vertex<T>>(visited)));
+                paths.Add(new Path<T>(index++, new LinkedList<Vertex<T>>(visited)));
             }
 
             foreach (var edge in currentVertex.Edges)
@@ -90,7 +90,7 @@ namespace scholzova_sem_01.Path
 
         private bool PathAlreadyExists(List<Vertex<T>> newPath)
         {
-            foreach (var path in List)
+            foreach (var path in paths)
             {
                 if (path.Equals(newPath))
                 {

@@ -14,9 +14,10 @@ namespace scholzova_sem_01.Parser
     public class Parser<T>
     {
         private Data<T> data { get; set; }
-        private List<Vertex<T>> vertices {  get; set; }
+        private List<Vertex<T>> vertices { get; set; }
 
-        public Parser(string filePath) {
+        public Parser(string filePath)
+        {
             try
             {
                 string jsonData = System.IO.File.ReadAllText(filePath);
@@ -28,86 +29,129 @@ namespace scholzova_sem_01.Parser
                 Console.WriteLine("Chyba při parsování dat ze souboru: " + ex.Message);
             }
         }
-      
+
         public List<Vertex<T>> ExtractVertices()
         {
-            vertices = new List<Vertex<T>>();
-            foreach (T vertexName in data.Vertices)
+            try
             {
-                vertices.Add(new Vertex<T>(vertexName));
+                vertices = new List<Vertex<T>>();
+                foreach (T vertexName in data.Vertices)
+                {
+                    vertices.Add(new Vertex<T>(vertexName));
+                }
+                return vertices;
             }
-            return vertices;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při parsování dat ze souboru: " + ex.Message);
+                return null;
+            }
+
         }
 
         public List<Edge<T>> ExtractEdges()
         {
-            List<Edge<T>> edges = new List<Edge<T>>();
-            foreach (T[] edgeArray in data.Edges)
+            try
             {
-                T fromVertexName = edgeArray[0];
-                T toVertexName = edgeArray[1];
 
-                Vertex<T> fromVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, fromVertexName));
-                Vertex<T> toVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, toVertexName));
-                T name = (T)Convert.ChangeType("E" + edges.Count.ToString(), typeof(T));
+                List<Edge<T>> edges = new List<Edge<T>>();
+                foreach (T[] edgeArray in data.Edges)
+                {
+                    T fromVertexName = edgeArray[0];
+                    T toVertexName = edgeArray[1];
 
-                if (fromVertex != null && toVertex != null)
-                {
-                    edges.Add(new Edge<T>(name, fromVertex, toVertex));
+                    Vertex<T> fromVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, fromVertexName));
+                    Vertex<T> toVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, toVertexName));
+                    T name = (T)Convert.ChangeType("E" + edges.Count.ToString(), typeof(T));
+
+                    if (fromVertex != null && toVertex != null)
+                    {
+                        edges.Add(new Edge<T>(name, fromVertex, toVertex));
+                    }
+                    else
+                    {
+                        throw new Exception("Nepodařilo se najít vrcholy pro hranu.");
+                    }
                 }
-                else
-                {
-                    throw new Exception("Nepodařilo se najít vrcholy pro hranu.");
-                }
+                return edges;
             }
-            return edges;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při parsování dat ze souboru: " + ex.Message);
+                return null;
+            }
         }
 
         public List<Vertex<T>> ExtractInputVertices()
         {
-            List<Vertex<T>> inputVertices = new List<Vertex<T>>();
-            foreach (T inputVertexName in data.InputVertices)
+            try
             {
-                Vertex<T> inputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, inputVertexName));
-                if (inputVertex != null)
+                List<Vertex<T>> inputVertices = new List<Vertex<T>>();
+                foreach (T inputVertexName in data.InputVertices)
                 {
-                    inputVertices.Add(inputVertex);
+                    Vertex<T> inputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, inputVertexName));
+                    if (inputVertex != null)
+                    {
+                        inputVertices.Add(inputVertex);
+                    }
                 }
+                return inputVertices;
             }
-            return inputVertices;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při parsování dat ze souboru: " + ex.Message);
+                return null;
+            }
         }
 
         public List<Vertex<T>> ExtractOutputVertices()
         {
-            List<Vertex<T>> outputVertices = new List<Vertex<T>>();
-            foreach (T outputVertexName in data.OutputVertices)
+            try
             {
-                Vertex<T> outputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, outputVertexName));
-                if (outputVertex != null)
+                List<Vertex<T>> outputVertices = new List<Vertex<T>>();
+                foreach (T outputVertexName in data.OutputVertices)
                 {
-                    outputVertices.Add(outputVertex);
+                    Vertex<T> outputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, outputVertexName));
+                    if (outputVertex != null)
+                    {
+                        outputVertices.Add(outputVertex);
+                    }
                 }
+                return outputVertices;
             }
-            return outputVertices;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při parsování dat ze souboru: " + ex.Message);
+                return null;
+            }
         }
 
         public List<List<Vertex<T>>> ExtractCross()
         {
-            List<List<Vertex<T>>> cross = new List<List<Vertex<T>>>();
-            foreach (T[] crossArray in data.Cross)
+            try
             {
-                List<Vertex<T>> crossList = new List<Vertex<T>>();
-                foreach (T crossItem in crossArray)
+
+                List<List<Vertex<T>>> cross = new List<List<Vertex<T>>>();
+                foreach (T[] crossArray in data.Cross)
                 {
-                    Vertex<T> crossVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, crossItem));
-                    if (crossVertex != null)
+                    List<Vertex<T>> crossList = new List<Vertex<T>>();
+                    foreach (T crossItem in crossArray)
                     {
-                        crossList.Add(crossVertex);
+                        Vertex<T> crossVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, crossItem));
+                        if (crossVertex != null)
+                        {
+                            crossList.Add(crossVertex);
+                        }
                     }
+                    cross.Add(crossList);
                 }
-                cross.Add(crossList);
+                return cross;
             }
-            return cross;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při parsování dat ze souboru: " + ex.Message);
+                return null;
+            }
         }
 
     }
