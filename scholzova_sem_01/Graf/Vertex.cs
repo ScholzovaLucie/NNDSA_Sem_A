@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Graf
 {
-    public class Vertex<T>
+    public class Vertex<T, TVertexData, TRdgeData>
     {
         public T Name
         {
@@ -14,21 +14,26 @@ namespace scholzova_sem_01.Graf
             set { name = value; }
         }
 
+        public TVertexData data { get; set; }
+
         private T name;
 
-        public List<Edge<T>> Edges {  
-            get { return edges;}
+        public List<Edge<T, TVertexData, TRdgeData>> Edges
+        {
+            get { return edges; }
             set { edges = value; }
         }
 
-        private List<Edge<T>> edges;
+        private List<Edge<T, TVertexData, TRdgeData>> edges;
 
-        public Vertex(T name) {
+        public Vertex(T name)
+        {
             this.name = name;
-            edges = new List<Edge<T>>();
+            edges = new List<Edge<T, TVertexData, TRdgeData>>();
         }
 
-        public bool sameVertex(Vertex<T> other)
+
+        public bool sameVertex(Vertex<T, TVertexData, TRdgeData> other)
         {
             return Name.Equals(other.Name);
         }
@@ -42,7 +47,7 @@ namespace scholzova_sem_01.Graf
         {
             unchecked
             {
-                int hash = 17; 
+                int hash = 17;
                 hash = hash * 23 + (Name != null ? Name.GetHashCode() : 0);
                 return hash;
             }

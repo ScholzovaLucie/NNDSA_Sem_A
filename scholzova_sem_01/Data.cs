@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01
 {
-    public class Data<T>
+    public class Data<T, TVertexData, TRdgeData>
     {
         public T[] Vertices { get; set; }
         public T[] InputVertices { get; set; }
         public T[] OutputVertices { get; set; }
-        public T[][] Cross {  get; set; }
+        public T[][] Cross { get; set; }
         public T[][] Edges { get; set; }
     }
 }

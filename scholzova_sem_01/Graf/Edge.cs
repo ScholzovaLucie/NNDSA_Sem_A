@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Graf
 {
-    public class Edge<T>
+    public class Edge<T, TVertexData, TRdgeData>
     {
         public T Name { get; set; }
-        public Vertex<T> StartVertex { get; set; }
-        public Vertex<T> EndVertex { get; set; }
+        public Vertex<T, TVertexData, TRdgeData> StartVertex { get; set; }
+        public Vertex<T, TVertexData, TRdgeData> EndVertex { get; set; }
 
-        public Edge(T name, Vertex<T> startVertex, Vertex<T> endVertex)
+        public Edge(T name, Vertex<T, TVertexData, TRdgeData> startVertex, Vertex<T, TVertexData, TRdgeData> endVertex)
         {
             Name = name;
             StartVertex = startVertex;
@@ -24,7 +24,7 @@ namespace scholzova_sem_01.Graf
             return Name + ": " + StartVertex + ", " + EndVertex;
         }
 
-        public bool sameEdge(Edge<T> other)
+        public bool sameEdge(Edge<T, TVertexData, TRdgeData> other)
         {
             return StartVertex.Name.Equals(other.StartVertex.Name) && EndVertex.Name.Equals(other.EndVertex.Name);
         }

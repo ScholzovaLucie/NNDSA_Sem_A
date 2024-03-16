@@ -8,18 +8,18 @@ using scholzova_sem_01.Graf;
 
 namespace scholzova_sem_01.Path
 {
-    public class DisjunktPaths<T>
+    public class DisjunktPaths<T, TVertexData, TRdgeData>
     {
         [JsonProperty]
-        public List<HashSet<Path<T>>> disjointPaths { get; set; }
+        public List<HashSet<Path<T, TVertexData, TRdgeData>>> disjointPaths { get; set; }
 
-        public DisjunktPaths(Paths<T> LList)
+        public DisjunktPaths(Paths<T, TVertexData, TRdgeData> LList)
         {
-            disjointPaths = new List<HashSet<Path<T>>>();
-            FindDisjointPaths(LList.paths, new HashSet<Path<T>>());
+            disjointPaths = new List<HashSet<Path<T, TVertexData, TRdgeData>>>();
+            FindDisjointPaths(LList.paths, new HashSet<Path<T, TVertexData, TRdgeData>>());
         }
 
-        public List<HashSet<Path<T>>> getDisjonktPaths()
+        public List<HashSet<Path<T, TVertexData, TRdgeData>>> getDisjonktPaths()
         {
             return disjointPaths;
         }
@@ -37,7 +37,7 @@ namespace scholzova_sem_01.Path
             }
         }
 
-        private void FindDisjointPaths(List<Path<T>> paths, HashSet<Path<T>> currentSet)
+        private void FindDisjointPaths(List<Path<T, TVertexData, TRdgeData>> paths, HashSet<Path<T, TVertexData, TRdgeData>> currentSet)
         {
 
             foreach (var path_first in paths)
@@ -52,18 +52,16 @@ namespace scholzova_sem_01.Path
 
                     if (path_first.IsDisjoint(path_second) && !disjunktAlreadyExist(currentSet))
                     {
-                        disjointPaths.Add(new HashSet<Path<T>>(currentSet));
+                        disjointPaths.Add(new HashSet<Path<T, TVertexData, TRdgeData>>(currentSet));
                         FindDisjunktPathsToSet(paths, currentSet);
                     }
                     currentSet.Clear();
 
                 }
-
             }
-
         }
 
-        private void FindDisjunktPathsToSet(List<Path<T>> paths, HashSet<Path<T>> currentSet)
+        private void FindDisjunktPathsToSet(List<Path<T, TVertexData, TRdgeData>> paths, HashSet<Path<T, TVertexData, TRdgeData>> currentSet)
         {
             int count = 0;
 
@@ -83,7 +81,7 @@ namespace scholzova_sem_01.Path
 
                     if (!disjunktAlreadyExist(currentSet))
                     {
-                        disjointPaths.Add(new HashSet<Path<T>>(currentSet));
+                        disjointPaths.Add(new HashSet<Path<T, TVertexData, TRdgeData>>(currentSet));
                         FindDisjunktPathsToSet(paths, currentSet);
                     }
                     else
@@ -93,11 +91,9 @@ namespace scholzova_sem_01.Path
 
                 }
             }
-
-
         }
 
-        private bool disjunktAlreadyExist(HashSet<Path<T>> set)
+        private bool disjunktAlreadyExist(HashSet<Path<T, TVertexData, TRdgeData>> set)
         {
             if (disjointPaths.Count == 0) return false;
 
@@ -111,7 +107,7 @@ namespace scholzova_sem_01.Path
             return false;
         }
 
-        private bool IsDisjointSet(HashSet<Path<T>> set, Path<T> newPath)
+        private bool IsDisjointSet(HashSet<Path<T, TVertexData, TRdgeData>> set, Path<T, TVertexData, TRdgeData> newPath)
         {
             foreach (var path in set)
             {
