@@ -31,6 +31,22 @@ namespace scholzova_sem_01.Graf
 
         public void RemoveVertex(Vertex<T> vertex)
         {
+            foreach (var v in vertices)
+            {
+                foreach (var edge in v.Edges.ToList())
+                {
+                    if (edge.EndVertex == vertex)
+                    {
+                        var nextVertex = vertices.FirstOrDefault(v => v.Edges.Any(e => e.StartVertex == vertex));
+                        if (nextVertex != null)
+                        {
+                            edge.EndVertex = nextVertex;
+                            nextVertex.Edges.Add(edge);
+                        }
+                        v.Edges.Remove(edge);
+                    }
+                }
+            }
             vertices.Remove(vertex);
         }
 
