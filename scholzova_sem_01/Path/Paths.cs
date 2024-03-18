@@ -47,16 +47,14 @@ namespace scholzova_sem_01.Path
         private void DFS(Vertex<T, TVertexData, TRdgeData> currentVertex, List<Vertex<T, TVertexData, TRdgeData>> visited)
         {
             visited.Add(currentVertex);
-
-
-            if (
-                containsByName(currentVertex.Name, OutputVertices) &&
-                visited.Count > 1 &&
-                !PathAlreadyExists(visited)
-                )
+            if (containsByName(currentVertex.Name, OutputVertices)
+                && visited.Count > 1
+                && !PathAlreadyExists(visited))
             {
-                paths.Add(new Path<T, TVertexData, TRdgeData>(index++, new LinkedList<Vertex<T, TVertexData, TRdgeData>>(visited)));
+                paths.Add(new Path<T, TVertexData, TRdgeData>(index++,
+                    new LinkedList<Vertex<T, TVertexData, TRdgeData>>(visited)));
             }
+
 
             foreach (var edge in currentVertex.Edges)
             {
@@ -66,13 +64,15 @@ namespace scholzova_sem_01.Path
                 }
             }
 
-
-            foreach (var crossList in graphData.Cross)
+            foreach (var cross in graphData.Cross)
             {
-                if (crossList[0] == currentVertex)
+                if (cross[0] == currentVertex
+                    && !visited.Contains(cross[1])
+                    && !visited.Contains(cross[2]))
                 {
-                    visited.Add(crossList[1]);
-                    DFS(crossList[2], visited);
+                    List<Vertex<T, TVertexData, TRdgeData>> newVisited = new List<Vertex<T, TVertexData, TRdgeData>>(visited);
+                    newVisited.Add(cross[1]);
+                    DFS(cross[2], newVisited);
                 }
             }
 
