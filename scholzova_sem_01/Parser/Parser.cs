@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Parser
 {
-    public class Parser<T, TVertexData, TRdgeData>
+    public class Parser<T>
     {
-        private Data<T, TVertexData, TRdgeData> data { get; set; }
-        private List<Vertex<T, TVertexData, TRdgeData>> vertices { get; set; }
+        private Data<T> data { get; set; }
+        private List<Vertex<T>> vertices { get; set; }
 
         public Parser(string filePath)
         {
             try
             {
                 string jsonData = System.IO.File.ReadAllText(filePath);
-                data = JsonConvert.DeserializeObject<Data<T, TVertexData, TRdgeData>>(jsonData);
+                data = JsonConvert.DeserializeObject<Data<T>>(jsonData);
 
             }
             catch (Exception ex)
@@ -30,14 +30,14 @@ namespace scholzova_sem_01.Parser
             }
         }
 
-        public List<Vertex<T, TVertexData, TRdgeData>> ExtractVertices()
+        public List<Vertex<T>> ExtractVertices()
         {
             try
             {
-                vertices = new List<Vertex<T, TVertexData, TRdgeData>>();
+                vertices = new List<Vertex<T>>();
                 foreach (T vertexName in data.Vertices)
                 {
-                    vertices.Add(new Vertex<T, TVertexData, TRdgeData>(vertexName));
+                    vertices.Add(new Vertex<T>(vertexName));
                 }
                 return vertices;
             }
@@ -49,24 +49,24 @@ namespace scholzova_sem_01.Parser
 
         }
 
-        public List<Edge<T, TVertexData, TRdgeData>> ExtractEdges()
+        public List<Edge<T>> ExtractEdges()
         {
             try
             {
 
-                List<Edge<T, TVertexData, TRdgeData>> edges = new List<Edge<T, TVertexData, TRdgeData>>();
+                List<Edge<T>> edges = new List<Edge<T>>();
                 foreach (T[] edgeArray in data.Edges)
                 {
                     T fromVertexName = edgeArray[0];
                     T toVertexName = edgeArray[1];
 
-                    Vertex<T, TVertexData, TRdgeData> fromVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, fromVertexName));
-                    Vertex<T, TVertexData, TRdgeData> toVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, toVertexName));
+                    Vertex<T> fromVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, fromVertexName));
+                    Vertex<T> toVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, toVertexName));
                     T name = (T)Convert.ChangeType("E" + edges.Count.ToString(), typeof(T));
 
                     if (fromVertex != null && toVertex != null)
                     {
-                        edges.Add(new Edge<T, TVertexData, TRdgeData>(name, fromVertex, toVertex));
+                        edges.Add(new Edge<T>(name, fromVertex, toVertex));
                     }
                     else
                     {
@@ -82,14 +82,14 @@ namespace scholzova_sem_01.Parser
             }
         }
 
-        public List<Vertex<T, TVertexData, TRdgeData>> ExtractInputVertices()
+        public List<Vertex<T>> ExtractInputVertices()
         {
             try
             {
-                List<Vertex<T, TVertexData, TRdgeData>> inputVertices = new List<Vertex<T, TVertexData, TRdgeData>>();
+                List<Vertex<T>> inputVertices = new List<Vertex<T>>();
                 foreach (T inputVertexName in data.InputVertices)
                 {
-                    Vertex<T, TVertexData, TRdgeData> inputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, inputVertexName));
+                    Vertex<T> inputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, inputVertexName));
                     if (inputVertex != null)
                     {
                         inputVertices.Add(inputVertex);
@@ -104,14 +104,14 @@ namespace scholzova_sem_01.Parser
             }
         }
 
-        public List<Vertex<T, TVertexData, TRdgeData>> ExtractOutputVertices()
+        public List<Vertex<T>> ExtractOutputVertices()
         {
             try
             {
-                List<Vertex<T, TVertexData, TRdgeData>> outputVertices = new List<Vertex<T, TVertexData, TRdgeData>>();
+                List<Vertex<T>> outputVertices = new List<Vertex<T>>();
                 foreach (T outputVertexName in data.OutputVertices)
                 {
-                    Vertex<T, TVertexData, TRdgeData> outputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, outputVertexName));
+                    Vertex<T> outputVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, outputVertexName));
                     if (outputVertex != null)
                     {
                         outputVertices.Add(outputVertex);
@@ -126,18 +126,18 @@ namespace scholzova_sem_01.Parser
             }
         }
 
-        public List<List<Vertex<T, TVertexData, TRdgeData>>> ExtractCross()
+        public List<List<Vertex<T>>> ExtractCross()
         {
             try
             {
 
-                List<List<Vertex<T, TVertexData, TRdgeData>>> cross = new List<List<Vertex<T, TVertexData, TRdgeData>>>();
+                List<List<Vertex<T>>> cross = new List<List<Vertex<T>>>();
                 foreach (T[] crossArray in data.Cross)
                 {
-                    List<Vertex<T, TVertexData, TRdgeData>> crossList = new List<Vertex<T, TVertexData, TRdgeData>>();
+                    List<Vertex<T>> crossList = new List<Vertex<T>>();
                     foreach (T crossItem in crossArray)
                     {
-                        Vertex<T, TVertexData, TRdgeData> crossVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, crossItem));
+                        Vertex<T> crossVertex = vertices.Find(v => EqualityComparer<T>.Default.Equals(v.Name, crossItem));
                         if (crossVertex != null)
                         {
                             crossList.Add(crossVertex);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace scholzova_sem_01
 {
-    public class Data<T, TVertexData, TRdgeData>
+    public class Data<T>
     {
         public T[] Vertices { get; set; }
         public T[] InputVertices { get; set; }

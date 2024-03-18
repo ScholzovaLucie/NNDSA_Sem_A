@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using scholzova_sem_01.Graf;
+﻿using scholzova_sem_01.Graf;
 
 namespace scholzova_sem_01.Path
 {
-    public class Path<T, TVertexData, TRdgeData>
+    public class Path<T>
     {
         public string Name { get; set; }
-        public LinkedList<Vertex<T, TVertexData, TRdgeData>> Vertices { get; set; }
+        public LinkedList<Vertex<T>> Vertices { get; set; }
 
-        public Path(LinkedList<Vertex<T, TVertexData, TRdgeData>> vertices)
+        public Path(LinkedList<Vertex<T>> vertices)
         {
             Vertices = vertices;
         }
 
-        public Path(int index, LinkedList<Vertex<T, TVertexData, TRdgeData>> vertices)
+        public Path(int index, LinkedList<Vertex<T>> vertices)
         {
             Name = "A" + index;
             Vertices = vertices;
@@ -30,38 +24,38 @@ namespace scholzova_sem_01.Path
             Name = "A" + index;
         }
 
-        public Path<T, TVertexData, TRdgeData> Copy()
+        public Path<T> Copy()
         {
-            LinkedList<Vertex<T, TVertexData, TRdgeData>> copiedVertices = new LinkedList<Vertex<T, TVertexData, TRdgeData>>(Vertices);
-            return new Path<T, TVertexData, TRdgeData>(copiedVertices);
+            LinkedList<Vertex<T>> copiedVertices = new LinkedList<Vertex<T>>(Vertices);
+            return new Path<T>(copiedVertices);
         }
 
-        public Vertex<T, TVertexData, TRdgeData> getFirst()
+        public Vertex<T> getFirst()
         {
             return Vertices.First();
         }
 
-        public Vertex<T, TVertexData, TRdgeData> getLast()
+        public Vertex<T> getLast()
         {
             return Vertices.Last();
         }
 
 
-        public bool Equals(Path<T, TVertexData, TRdgeData> other)
+        public bool Equals(Path<T> other)
         {
             if (Vertices.Count != other.Vertices.Count) return false;
 
             bool same = true;
 
-            Vertex<T, TVertexData, TRdgeData> aktual_this = Vertices.First();
-            Vertex<T, TVertexData, TRdgeData> aktual_other = other.Vertices.First();
+            Vertex<T> aktual_this = Vertices.First();
+            Vertex<T> aktual_other = other.Vertices.First();
 
             if (!aktual_this.Name.Equals(aktual_other.Name))
             {
                 return false;
             }
 
-            foreach (Vertex<T, TVertexData, TRdgeData> s in Vertices)
+            foreach (Vertex<T> s in Vertices)
             {
                 if (Vertices.Find(aktual_this).Next == null)
                 {
@@ -84,7 +78,7 @@ namespace scholzova_sem_01.Path
             return same;
         }
 
-        public bool IsDisjoint(Path<T, TVertexData, TRdgeData> other)
+        public bool IsDisjoint(Path<T> other)
         {
             foreach (var vertex in Vertices)
             {

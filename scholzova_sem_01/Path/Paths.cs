@@ -4,25 +4,24 @@ using scholzova_sem_01.Graf;
 namespace scholzova_sem_01.Path
 {
 
-    public class Paths<T, TVertexData, TRdgeData>
+    public class Paths<T>
     {
         [JsonProperty]
-        public List<Path<T, TVertexData, TRdgeData>> paths { get; set; }
+        public List<Path<T>> paths { get; set; }
         private int index = 1;
-        private Graf<T, TVertexData, TRdgeData> graphData;
-        public List<Vertex<T, TVertexData, TRdgeData>> InputVertices { get; private set; }
-        public List<Vertex<T, TVertexData, TRdgeData>> OutputVertices { get; private set; }
+        private Graf<T> graphData;
+        public List<Vertex<T>> InputVertices { get; private set; }
+        public List<Vertex<T>> OutputVertices { get; private set; }
 
         public Paths(
-            Graf<T, TVertexData, TRdgeData> graphData,
-            List<Vertex<T, TVertexData, TRdgeData>> InputVertices,
-            List<Vertex<T, TVertexData, TRdgeData>> OutputVertices
+            GraphProcessor<T> processor,
+            Graf<T> graf
             )
         {
-            this.graphData = graphData;
-            this.InputVertices = InputVertices;
-            this.OutputVertices = OutputVertices;
-            paths = new List<Path<T, TVertexData, TRdgeData>>();
+            this.graphData = graf;
+            this.InputVertices = processor.getInputVertices();
+            this.OutputVertices = processor.getOutputVertices();
+            paths = new List<Path<T>>();
             FindPaths();
         }
 
@@ -39,20 +38,20 @@ namespace scholzova_sem_01.Path
         {
             foreach (var inputVertex in InputVertices)
             {
-                List<Vertex<T, TVertexData, TRdgeData>> visited = new List<Vertex<T, TVertexData, TRdgeData>>();
+                List<Vertex<T>> visited = new List<Vertex<T>>();
                 DFS(inputVertex, visited);
             }
         }
 
-        private void DFS(Vertex<T, TVertexData, TRdgeData> currentVertex, List<Vertex<T, TVertexData, TRdgeData>> visited)
+        private void DFS(Vertex<T> currentVertex, List<Vertex<T>> visited)
         {
             visited.Add(currentVertex);
             if (containsByName(currentVertex.Name, OutputVertices)
                 && visited.Count > 1
                 && !PathAlreadyExists(visited))
             {
-                paths.Add(new Path<T, TVertexData, TRdgeData>(index++,
-                    new LinkedList<Vertex<T, TVertexData, TRdgeData>>(visited)));
+                paths.Add(new Path<T>(index++,
+                    new LinkedList<Vertex<T>>(visited)));
             }
 
 
@@ -70,7 +69,7 @@ namespace scholzova_sem_01.Path
                     && !visited.Contains(cross[1])
                     && !visited.Contains(cross[2]))
                 {
-                    List<Vertex<T, TVertexData, TRdgeData>> newVisited = new List<Vertex<T, TVertexData, TRdgeData>>(visited);
+                    List<Vertex<T>> newVisited = new List<Vertex<T>>(visited);
                     newVisited.Add(cross[1]);
                     DFS(cross[2], newVisited);
                 }
@@ -80,7 +79,7 @@ namespace scholzova_sem_01.Path
         }
 
 
-        private bool containsByName(T name, List<Vertex<T, TVertexData, TRdgeData>> list)
+        private bool containsByName(T name, List<Vertex<T>> list)
         {
             foreach (var vertex in list)
             {
@@ -93,7 +92,7 @@ namespace scholzova_sem_01.Path
             return false;
         }
 
-        private bool PathAlreadyExists(List<Vertex<T, TVertexData, TRdgeData>> newPath)
+        private bool PathAlreadyExists(List<Vertex<T>> newPath)
         {
             foreach (var path in paths)
             {

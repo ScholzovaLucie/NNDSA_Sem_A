@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using scholzova_sem_01.Graf;
+﻿using Newtonsoft.Json;
 
 namespace scholzova_sem_01.Path
 {
-    public class DisjointPaths<T, TVertexData, TEdgeData>
+    public class DisjointPaths<T>
     {
         [JsonProperty]
-        public List<HashSet<Path<T, TVertexData, TEdgeData>>> DisjointPathSets { get; private set; }
+        public List<HashSet<Path<T>>> DisjointPathSets { get; private set; }
         private int MaxTupleSize;
 
-        public DisjointPaths(List<Path<T, TVertexData, TEdgeData>> paths, int maxTupleSize)
+        public DisjointPaths(List<Path<T>> paths, int maxTupleSize)
         {
-            DisjointPathSets = new List<HashSet<Path<T, TVertexData, TEdgeData>>>();
+            DisjointPathSets = new List<HashSet<Path<T>>>();
             MaxTupleSize = maxTupleSize;
             GenerateDisjointSets(paths);
         }
 
-        public List<HashSet<Path<T, TVertexData, TEdgeData>>> getDisjonktPaths()
+        public List<HashSet<Path<T>>> getDisjonktPaths()
         {
             return DisjointPathSets;
         }
@@ -40,19 +33,19 @@ namespace scholzova_sem_01.Path
             }
         }
 
-        private void GenerateDisjointSets(List<Path<T, TVertexData, TEdgeData>> paths)
+        private void GenerateDisjointSets(List<Path<T>> paths)
         {
             var pairs = GenerateAllPairs(paths);
 
             foreach (var pair in pairs)
             {
-                DisjointPathSets.Add(new HashSet<Path<T, TVertexData, TEdgeData>>(pair));
+                DisjointPathSets.Add(new HashSet<Path<T>>(pair));
             }
 
             for (int currentSize = 2; currentSize < MaxTupleSize; currentSize++)
             {
                 var currentSets = DisjointPathSets.Where(s => s.Count == currentSize).ToList();
-                var newSets = new List<HashSet<Path<T, TVertexData, TEdgeData>>>();
+                var newSets = new List<HashSet<Path<T>>>();
 
                 foreach (var set in currentSets)
                 {
@@ -60,7 +53,7 @@ namespace scholzova_sem_01.Path
                     {
                         if (set.All(s => s.IsDisjoint(path)) && !set.Contains(path))
                         {
-                            var newSet = new HashSet<Path<T, TVertexData, TEdgeData>>(set) { path };
+                            var newSet = new HashSet<Path<T>>(set) { path };
                             if (!newSets.Any(ns => ns.SetEquals(newSet)))
                             {
                                 newSets.Add(newSet);
@@ -73,9 +66,9 @@ namespace scholzova_sem_01.Path
             }
         }
 
-        private List<List<Path<T, TVertexData, TEdgeData>>> GenerateAllPairs(List<Path<T, TVertexData, TEdgeData>> paths)
+        private List<List<Path<T>>> GenerateAllPairs(List<Path<T>> paths)
         {
-            var pairs = new List<List<Path<T, TVertexData, TEdgeData>>>();
+            var pairs = new List<List<Path<T>>>();
 
             for (int i = 0; i < paths.Count; i++)
             {
@@ -83,7 +76,7 @@ namespace scholzova_sem_01.Path
                 {
                     if (paths[i].IsDisjoint(paths[j]))
                     {
-                        pairs.Add(new List<Path<T, TVertexData, TEdgeData>> { paths[i], paths[j] });
+                        pairs.Add(new List<Path<T>> { paths[i], paths[j] });
                     }
                 }
             }

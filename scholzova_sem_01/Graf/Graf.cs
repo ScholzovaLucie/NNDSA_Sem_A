@@ -1,35 +1,27 @@
-﻿using scholzova_sem_01.Graf;
-using scholzova_sem_01.Path;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace scholzova_sem_01.Graf
+﻿namespace scholzova_sem_01.Graf
 {
-    public class Graf<T, TVertexData, TRdgeData>
+    public class Graf<T>: IGraf<T>
     {
-        private List<Vertex<T, TVertexData, TRdgeData>> vertices;
+        private List<Vertex<T>> vertices;
 
-        public List<Vertex<T, TVertexData, TRdgeData>> Vertices { get { return vertices; } }
-        private List<List<Vertex<T, TVertexData, TRdgeData>>> cross;
-        public List<List<Vertex<T, TVertexData, TRdgeData>>> Cross { get { return cross; } }
+        public List<Vertex<T>> Vertices { get { return vertices; } }
+        private List<List<Vertex<T>>> cross;
+        public List<List<Vertex<T>>> Cross { get { return cross; } }
 
         public int size { get { return vertices.Count; } }
 
         public Graf()
         {
-            this.vertices = new List<Vertex<T, TVertexData, TRdgeData>>();
-            this.cross = new List<List<Vertex<T, TVertexData, TRdgeData>>>();
+            this.vertices = new List<Vertex<T>>();
+            this.cross = new List<List<Vertex<T>>>();
         }
 
-        public void AddVertex(Vertex<T, TVertexData, TRdgeData> vertex)
+        public void AddVertex(Vertex<T> vertex)
         {
             vertices.Add(vertex);
         }
 
-        public void UpdateVertex(Vertex<T, TVertexData, TRdgeData> vertex)
+        public void UpdateVertex(Vertex<T> vertex)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -38,7 +30,7 @@ namespace scholzova_sem_01.Graf
 
         }
 
-        public void RemoveVertex(Vertex<T, TVertexData, TRdgeData> vertex)
+        public void RemoveVertex(Vertex<T> vertex)
         {
             foreach (var v in vertices)
             {
@@ -59,12 +51,12 @@ namespace scholzova_sem_01.Graf
             vertices.Remove(vertex);
         }
 
-        public bool HasVertex(Vertex<T, TVertexData, TRdgeData> vertex)
+        public bool HasVertex(Vertex<T> vertex)
         {
             return vertices.Contains(vertex);
         }
 
-        public Vertex<T, TVertexData, TRdgeData> findVertexByName(T name)
+        public Vertex<T> findVertexByName(T name)
         {
             foreach (var item in vertices)
             {
