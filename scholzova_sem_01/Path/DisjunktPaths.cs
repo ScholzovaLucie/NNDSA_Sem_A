@@ -44,13 +44,11 @@ namespace scholzova_sem_01.Path
         {
             var pairs = GenerateAllPairs(paths);
 
-            // initialize disjoint set with pairs
             foreach (var pair in pairs)
             {
                 DisjointPathSets.Add(new HashSet<Path<T, TVertexData, TEdgeData>>(pair));
             }
 
-            // iteratively expand these pairs into larger sets
             for (int currentSize = 2; currentSize < MaxTupleSize; currentSize++)
             {
                 var currentSets = DisjointPathSets.Where(s => s.Count == currentSize).ToList();
@@ -71,7 +69,6 @@ namespace scholzova_sem_01.Path
                     }
                 }
 
-                // Add newly formed sets to the main collection
                 DisjointPathSets.AddRange(newSets);
             }
         }
