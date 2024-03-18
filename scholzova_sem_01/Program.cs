@@ -12,7 +12,7 @@ class Program
         Graf<string> graf = procesor.CreateGraf();
 
         Paths<string> paths = new Paths<string>(procesor, graf);
-        paths.printList();
+        // paths.printList();
 
         int maxTupleSize = Math.Min(procesor.getInputVertices().Count, procesor.getOutputVertices().Count);
         DisjointPaths<string> DisjointTuples = new DisjointPaths<string>(paths.paths, maxTupleSize);

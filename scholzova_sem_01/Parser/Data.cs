@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace scholzova_sem_01
+namespace scholzova_sem_01.Parser
 {
     public class Data<T>
     {

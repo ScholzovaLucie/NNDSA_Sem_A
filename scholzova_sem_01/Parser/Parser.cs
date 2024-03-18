@@ -1,13 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 using scholzova_sem_01.Graf;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace scholzova_sem_01.Parser
 {
@@ -20,7 +12,7 @@ namespace scholzova_sem_01.Parser
         {
             try
             {
-                string jsonData = System.IO.File.ReadAllText(filePath);
+                string jsonData = File.ReadAllText(filePath);
                 data = JsonConvert.DeserializeObject<Data<T>>(jsonData);
 
             }
